@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dasbor Bisnis Sate Maranggi</title>
+    <title>Dasbor Sate Maranggi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -272,7 +272,40 @@
         // Inisialisasi Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+// FUNGSI UNTUK RESET DATA AWAL SECARA MANUAL
+function resetDataAwal() {
+    console.log('Mencoba menyimpan data awal ke Firestore...');
 
+    // Data awal default yang akan kita masukkan
+    const dataAwal = {
+        modal: {
+            investment: [{ name: "Gerobak / Tenda", cost: 1500000 }, { name: "Alat Bakar", cost: 300000 }, { name: "Kompor & Gas", cost: 250000 }, { name: "Peralatan Masak & Makan", cost: 400000 }, { name: "Banner", cost: 100000 }],
+            operational: [{ name: "Sewa Lapak", cost: 300000 }, { name: "Transportasi", cost: 200000 }, { name: "Gas & Arang", cost: 150000 }]
+        },
+        hariKerjaPerBulan: 25,
+        targetBulananRp: 15000000,
+        menu: [
+            { 
+                id: 'sate-sapi', name: 'Sate Maranggi Sapi', hargaJual: 30000,
+                hppBreakdown: [{ name: 'Daging Sapi (100gr)', cost: 14000 }, { name: 'Bumbu & Kecap', cost: 5000 }, { name: 'Nasi/Lontong', cost: 2500 }, { name: 'Kemasan & Lainnya', cost: 1500 }],
+                resep: { C1_label: "Bumbu Marinasi", C1_content: "Bawang Merah: 10 siung\nBawang Putih: 8 siung\nLengkuas: 3 cm\nKetumbar Sangrai: 2 sdt", C2_label: "Sambal", C2_content: "Tomat Merah: 3 buah\nCabai Rawit: 15-20 buah", C3_label: "Langkah Pembuatan", C3_content: "Campur daging dengan bumbu halus.\nMarinasi di kulkas minimal 3 jam."}
+            }
+        ],
+        categories: { Pemasukan: ["Penjualan Harian", "Penjualan Pre-order"], Pengeluaran: ["Bahan Baku", "Sewa Lapak", "Operasional", "Transportasi", "Lain-lain"] }
+    };
+
+    // Perintah untuk menyimpan ke Firestore
+    db.collection('businessConfig').doc('main').set(dataAwal)
+      .then(() => {
+          console.log("SUKSES! Data awal berhasil disimpan.");
+          alert("SUKSES! Data awal berhasil disimpan. Silakan refresh halaman.");
+          location.reload(); // Otomatis refresh halaman
+      })
+      .catch(error => {
+          console.error("ERROR saat menyimpan data awal: ", error);
+          alert("ERROR! Gagal menyimpan data awal. Cek console untuk detail.");
+      });
+}
         document.addEventListener('DOMContentLoaded', function () {
             // Data Lokal (tidak disimpan di DB, bisa diubah sesuai kebutuhan)
             let businessData = {
@@ -694,4 +727,5 @@
         });
     </script>
 </body>
+
 </html>
